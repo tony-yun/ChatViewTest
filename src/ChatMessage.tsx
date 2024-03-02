@@ -7,22 +7,34 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const ChatMessage = () => {
-  const scale = useSharedValue(0);
+  const scaleFirst = useSharedValue(0);
+  const scaleSecond = useSharedValue(0);
 
   useEffect(() => {
-    scale.value = withTiming(1, {duration: 500});
+    scaleFirst.value = withTiming(1, {duration: 500}, () => {
+      scaleSecond.value = withTiming(1, {duration: 500});
+    });
   }, []);
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const animatedStyleFirst = useAnimatedStyle(() => {
     return {
-      transform: [{scale: scale.value}],
+      transform: [{scale: scaleFirst.value}],
+    };
+  });
+
+  const animatedStyleSecond = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: scaleSecond.value}],
     };
   });
 
   return (
     <View style={styles.mainView}>
-      <Animated.View style={[styles.messageContainer, animatedStyle]}>
+      <Animated.View style={[styles.messageContainer, animatedStyleFirst]}>
         <Text style={styles.messageText}>hello</Text>
+      </Animated.View>
+      <Animated.View style={[styles.messageContainer, animatedStyleSecond]}>
+        <Text style={styles.messageText}>nice to meet you</Text>
       </Animated.View>
     </View>
   );
